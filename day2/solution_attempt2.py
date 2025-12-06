@@ -29,7 +29,7 @@ def count(bounds):
     lower_l, lower_r = split(lower)
     upper_l, upper_r = split(upper)
     start = lower_l if lower_r <= lower_l else lower_l + 1
-    end = upper_l if upper_r >= upper_r else upper_l - 1
+    end = upper_l if upper_r >= upper_l else upper_l - 1
 
     sum = 0
     while start <= end:
@@ -49,10 +49,18 @@ sum([
     count((38593856, 38593862))
 ])  # 1227775554
 
+count((19391, 47353))
+count((4646427538, 4646497433))
+count((4426384, 4463095))
+count((527495356, 527575097))
 count((2, 17))
 count((9999984021, 10000017929))
+count((77, 122))
+count((165081, 338962))
+assert count((26, 76)) == 33 + 44 + 55 + 66
+
 with open("input.txt") as file:
     puzzle_input = map(lambda x: tuple(map(int, x.split("-"))),
                        file.readline().split(","))
     result = functools.reduce(lambda a, x: a + count(x), puzzle_input, 0)
-result
+result  # 24747430309
