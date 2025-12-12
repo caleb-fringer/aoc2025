@@ -10,6 +10,9 @@ def split(num):
     return map(int, (asStr[:n], asStr[n:]))
 
 
+'''Part 1'''
+
+
 def count(bounds):
     lower, upper = bounds
     if lower > upper:
@@ -38,16 +41,12 @@ def count(bounds):
     return sum
 
 
-sum([
-    count((11, 22)),
-    count((95, 115)),
-    count((998, 1012)),
-    count((1188511880, 1188511890)),
-    count((222220, 222224)),
-    count((1698522, 1698528)),
-    count((446443, 446449)),
-    count((38593856, 38593862))
-])  # 1227775554
+# Test input
+with open("test.txt") as file:
+    puzzle_input = map(lambda x: tuple(map(int, x.split("-"))),
+                       file.readline().split(","))
+    result = functools.reduce(lambda a, x: a + count(x), puzzle_input, 0)
+result
 
 count((19391, 47353))
 count((4646427538, 4646497433))
@@ -64,3 +63,33 @@ with open("input.txt") as file:
                        file.readline().split(","))
     result = functools.reduce(lambda a, x: a + count(x), puzzle_input, 0)
 result  # 24747430309
+
+with open("test.txt") as file:
+    puzzle_input = map(lambda x: tuple(map(int, x.split("-"))),
+                       file.readline().split(","))
+    result = functools.reduce(lambda a, x: a + count(x), puzzle_input, 0)
+result
+
+'''Part 2'''
+
+
+def invalidIds(n):
+    '''
+    Given an integer of length n, generate all the invalid ids of length n
+    with repeating sequences of length k >= 2.
+    '''
+
+    results = {}
+    for k in range(2, n//2 + 1):
+        if n % k == 0:
+            results[k] = []
+            z = (1-10**n) / (1-10**k)
+            start = 10**(k-1)
+            end = 10**(k) - 1
+            for i in range(start, end):
+                results[k].append(int(i * z))
+    return results
+
+
+result = invalidIds((100000, 999999))
+result[3]
