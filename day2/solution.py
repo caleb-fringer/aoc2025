@@ -1,6 +1,7 @@
 from operator import add
 import functools
 import re
+import math
 
 
 def split(num):
@@ -73,23 +74,40 @@ result
 '''Part 2'''
 
 
-def invalidIds(n):
+def invalidIds(bounds):
     '''
-    Given an integer of length n, generate all the invalid ids of length n
-    with repeating sequences of length k >= 2.
+    Given an upper and lower bound, find every invalid within the bounds.
     '''
+    lower, upper = bounds
+    n = len(str(lower))
+    m = len(str(upper))
+    if n < m:
+        return invalidIds((lower, 10**n - 1)).union(invalidIds((10**n, upper)))
+    if m > n:
+        return set()
 
-    results = {}
-    for k in range(2, n//2 + 1):
+    results = set()
+    for k in range(1, n//2 + 1):
         if n % k == 0:
-            results[k] = []
             z = (1-10**n) / (1-10**k)
-            start = 10**(k-1)
-            end = 10**(k) - 1
-            for i in range(start, end):
-                results[k].append(int(i * z))
+            start = int(math.ceil(lower / z))
+            end = int(math.floor(upper / z))
+            for i in range(start, end+1):
+                results.add(int(i*z))
     return results
 
 
-result = invalidIds((100000, 999999))
-result[3]
+def count2(bounds):
+    return functools.reduce(lambda a, x: a + x, invalidIds(bounds), 0)
+
+
+def partTwo(file):
+    with open(file) as file:
+        puzzle_input = map(lambda x: tuple(map(int, x.split("-"))),
+                           file.readline().split(","))
+
+        return functools.reduce(lambda a, x: a + count2(x), puzzle_input, 0)
+
+
+partTwo("test.txt")  # 4174379265
+partTwo("input.txt")  # 30962646823
