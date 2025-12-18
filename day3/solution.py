@@ -45,8 +45,8 @@ def getMaxJoltageOne(bank):
         return 10*stack[0] + max(bank[-1], stack[1])
 
 
-def partOne(input_file):
-    return functools.reduce(lambda a, bank: a + getMaxJoltageOne(bank),
+def solve(input_file, maxJoltageFunc):
+    return functools.reduce(lambda a, bank: a + maxJoltageFunc(bank),
                             processInput(input_file), 0)
 
 
@@ -55,5 +55,34 @@ getMaxJoltageOne([8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9])  # 89
 getMaxJoltageOne([2, 3, 4, 2, 3, 4, 2, 3, 4, 2, 3, 4, 2, 7, 8])  # 78
 getMaxJoltageOne([8, 1, 8, 1, 8, 1, 9, 1, 1, 1, 1, 2, 1, 1, 1])  # 92
 
-partOne("test.txt")
-partOne("input.txt")
+solve("test.txt", getMaxJoltageOne)  # 357
+solve("input.txt", getMaxJoltageOne)  # 16887
+
+
+'''
+Part Two
+'''
+
+
+def getMaxJoltageTwo(bank):
+    stack = []
+    n = len(bank)
+    for i in range(n):
+        while len(stack) > 0 and len(stack) + n - i > 12 and bank[i] > stack[-1]:
+            stack.pop()
+        stack.append(bank[i])
+
+    while len(stack) > 12:
+        stack.pop()
+
+    return functools.reduce(lambda a, x: a*10 + x, stack, 0)
+
+
+tests = processInput("test.txt")
+getMaxJoltageTwo(tests[0])
+getMaxJoltageTwo(tests[1])
+getMaxJoltageTwo(tests[2])
+getMaxJoltageTwo(tests[3])
+
+solve("test.txt", getMaxJoltageTwo)  # 3121910778619
+solve("input.txt", getMaxJoltageTwo)  # 167302518850275
