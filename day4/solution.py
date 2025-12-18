@@ -1,5 +1,6 @@
 import copy
 from functools import reduce
+import operator
 
 
 def pad(input, amt=1):
@@ -57,3 +58,40 @@ def partOneVisualizer(filepath):
 partOneVisualizer("test.txt")
 partOne("test.txt")  # 13
 partOne("input.txt")  # 1435
+
+
+def partTwo(filepath):
+    board = processInput(filepath)
+    rows, cols = len(board), len(board[0])
+
+    def bfs(coords):
+        i, j = coords
+        if board[i][j] != "@":
+            return 0
+
+        def inBounds(row, col):
+            return 0 <= row and row < rows and 0 <= col and col < cols
+
+        adjacentRolls = []
+        for k in range(-1, 2):
+            for l in range(-1, 2):
+                if k == 0 and l == 0:
+                    continue
+                if inBounds(i+k, j+l) and board[i+k][j+l] == "@":
+                    adjacentRolls.append((i+k, j+l))
+        if len(adjacentRolls) >= 4:
+            return 0
+
+        board[i][j] = "x"
+        return reduce(operator.add, map(bfs, adjacentRolls), 1)
+
+    count = 0
+    for i in range(rows):
+        for j in range(cols):
+            count += bfs((i, j))
+
+    return count
+
+
+partTwo("test.txt")  # 43
+partTwo("input.txt")  # 8623
