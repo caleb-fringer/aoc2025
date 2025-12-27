@@ -62,3 +62,28 @@ def solution(filepath, num_joins):
 
 solution("test.txt", 10)  # 40
 solution("input.txt", 1000)  # 115885
+
+'''
+Part Two
+'''
+
+
+def solution2(filepath):
+    vertices = preprocess(filepath)
+    edges = generateEdges(vertices)
+    edges.sort(key=lambda e: e.weight)
+    keymap = {v: i for i, v in enumerate(vertices)}
+    graph = DisjointSet(len(vertices))
+
+    a, b = None, None
+    for edge in edges:
+        u, v = keymap[edge.u], keymap[edge.v]
+
+        if graph.union(u, v):
+            a, b = edge.u, edge.v
+
+    return a[0] * b[0]
+
+
+solution2("test.txt")  # 25272
+solution2("input.txt")  # 274150525
